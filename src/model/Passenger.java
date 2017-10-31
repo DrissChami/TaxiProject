@@ -1,0 +1,104 @@
+package model;
+
+import java.awt.Image;
+import java.util.HashSet;
+
+import javax.swing.ImageIcon;
+
+/**
+ * Model a passenger wishing to get from one location to another.
+ * 
+ * @author David J. Barnes and Michael Kolling
+ * @version 2011.07.31
+ */
+public class Passenger implements DrawableItem {
+	private Location pickup;
+	private Location destination;
+	private Image image;
+	private static HashSet<Passenger> passengersList = new HashSet<Passenger>();
+
+	/**
+	 * Constructor for objects of class Passenger
+	 * 
+	 * @param pickup
+	 *            The pickup location, must not be null.
+	 * @param destination
+	 *            The destination location, must not be null.
+	 * @throws NullPointerException
+	 *             If either location is null.
+	 */
+	public Passenger(Location pickup, Location destination) {
+		if (pickup == null) {
+			throw new NullPointerException("Pickup location");
+		}
+		if (destination == null) {
+			throw new NullPointerException("Destination location");
+		}
+		this.pickup = pickup;
+		this.destination = destination;
+		// Load the image used to represent a person.
+		image = new ImageIcon(getClass().getResource("/images/person.jpg")).getImage();
+		passengersList.add(this);
+	}
+
+	/**
+	 * @return A string representation of this person.
+	 */
+	@Override
+	public String toString() {
+		return "Passenger travelling from " + pickup + " to " + destination;
+	}
+
+	/**
+	 * @return The image to be displayed on a GUI.
+	 */
+	public Image getImage() {
+		return image;
+	}
+
+	/**
+	 * @return The passenger's pickup location.
+	 */
+	public Location getLocation() {
+		return pickup;
+	}
+
+	/**
+	 * @return The pickup location.
+	 */
+	public Location getPickupLocation() {
+		return pickup;
+	}
+
+	/**
+	 * @return The destination location.
+	 */
+	public Location getDestination() {
+		return destination;
+	}
+
+	public static int passengersWaitingTaxiCount() {
+		int count = 0;
+		for (Passenger passenger : passengersList) {
+			boolean isDriven = false;
+			for (TaxiCompany taxiCompany : TaxiCompany.getTaxiCompaniesList()) {
+				for (Vehicle vehicle : taxiCompany.getVehicles()) {
+					if (vehicle instanceof Taxi) {
+						if (((Taxi) vehicle).getPassenger() == (passenger))
+							isDriven = true;
+					} else if (vehicle instanceof Shuttle) {
+
+					}
+				}
+			}
+			if (isDriven == false)
+				count++;
+		}
+		return count;
+
+	}
+
+	public static HashSet<Passenger> getPassengersList() {
+		return passengersList;
+	}
+}
